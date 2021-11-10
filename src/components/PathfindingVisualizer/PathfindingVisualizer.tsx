@@ -13,6 +13,8 @@ interface ICoordinate{
 export interface IGrid{
 	columns: number;
 	rows: number;
+	start: ICoordinate;
+	end: ICoordinate;
 	gridArray: ICell[][];
 }
 
@@ -63,6 +65,8 @@ const generateArray = (columns: number, rows: number): ICell[][] => {
 const initialGrid: IGrid = {
 	columns: columns,
 	rows: rows,
+	start: start,
+	end: end,
 	gridArray: generateArray(columns, rows,),
 }
 
@@ -86,7 +90,8 @@ const GridContainer = styled.div<GridProps>`
 	}
 `
 export default function PathfindingVisualizer() {
-	const [grid, setGrid] = useState(initialGrid)
+	const [grid, setGrid] = useState(initialGrid);
+	const [isPressed, setIsPressed] = useState(false);
 
 	const handleChangeClass = (element: HTMLElement, className: string) => {
 		if (className === "node-start" || className === "node-end") {
@@ -109,22 +114,59 @@ export default function PathfindingVisualizer() {
 	}
 
 	const handleMouseDown = (e: React.MouseEvent<HTMLLIElement>) => {
-		console.log(e.currentTarget.value);
+		console.log();
 		
 		const [row, column] = handleGetRowAndColumnFromValue(e.currentTarget.value)
 		
 		const element: HTMLElement | null = document.getElementById
 		(`${row}-${column}`);		
-		if (element !== null){
-			handleChangeClass(element, "node-wall")
+		if (element !== null && !grid.gridArray[row][column].isStart && !grid.gridArray[row][column].isEnd){
+			if(e.ctrlKey) {
+				//remove previous start cell
+				for (const row of grid.gridArray) {
+					for ( const cell of row) {
+						if (cell.isStart) {
+							cell.isStart = false;
+						}
+					}
+				}
+				//update grid start
+				grid.start = {x: column, y: row};
+				//update cell
+				grid.gridArray[row][column].isStart = true;
+				handleChangeClass(element, "node-start")
+			}else if (e.altKey) {
+				//remove previous end cell
+				for (const row of grid.gridArray) {
+					for ( const cell of row) {
+						if (cell.isEnd) {
+							cell.isEnd = false;
+						}
+					}
+				}
+				//update grid end
+				grid.end = {x: column, y: row};
+				//update cell
+				grid.gridArray[row][column].isEnd = true;
+				handleChangeClass(element, "node-start")
+			}else {
+				handleChangeClass(element, "node-wall")
+				grid.gridArray[row][column].isBlocked = !grid.gridArray[row][column].isBlocked
+			}
 		}
 
-		grid.gridArray[row][column].isBlocked = !grid.gridArray[row][column].isBlocked
+	
+	}
+	
+	const handleMouseEnter = (e: React.MouseEvent<HTMLLIElement>) => {
+		if(isPressed) {
+			handleMouseDown(e)
+		}
 	
 	}
 
 	const runAlgorithm = () => {
-		let visitedNodesInOrder: ICell[] = dijkstra(grid.gridArray, grid.gridArray[start.y][start.x], grid.gridArray[end.y][end.x] )
+		let visitedNodesInOrder: ICell[] = dijkstra(grid.gridArray, grid.gridArray[grid.start.y][grid.start.x], grid.gridArray[grid.end.y][grid.end.x] )
 
 		animateAlgorithm(visitedNodesInOrder)
 	}
@@ -186,9 +228,9 @@ export default function PathfindingVisualizer() {
 	return (
 		<>
 		<UI runAlgorithm={runAlgorithm} reset={reset}/>
-		<GridContainer columns={grid.columns} rows={grid.rows}>
+		<GridContainer columns={grid.columns} rows={grid.rows} onMouseDown={() => {setIsPressed(true)}} onMouseUp={() => {setIsPressed(false)}}>
 			{grid.gridArray.map((row: ICell[], rowIndex: number) => row.map((cell: ICell, colIndex: number) => 
-			<li value={(colIndex) + ((rowIndex * 30))} onMouseDown={handleMouseDown}>
+			<li key={`li-${rowIndex}-${colIndex}`} value={(colIndex) + ((rowIndex * 30))} onMouseDown={handleMouseDown} onMouseEnter={handleMouseEnter}>
 			<Node 
 			key={`${rowIndex}-${colIndex}`} cell={cell} id={`${rowIndex}-${colIndex}`}
 			/>
