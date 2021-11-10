@@ -10,9 +10,11 @@ type NodeContainerProps = {
 }
 
 const NodeContainer = styled.div<NodeContainerProps>`
-	background-color: ${({isStart, isEnd}) => isStart ? 'green' : isEnd ? "red" : '#ffffff7d'};
+	background-color: ${({isStart, isEnd}) => isStart ? 'rgb(53, 219, 53)' : isEnd ? "rgb(255, 81, 0)" : '#ffffff7d'};
+	width: 100%;
+	height: 100%;
 	border-radius: 5px;
-	border: 1px solid #555;
+	border: 2px solid #555;
 `
 
 export default function Node(props: INodeProps) {
@@ -20,7 +22,6 @@ export default function Node(props: INodeProps) {
 	
 	return (
 		<NodeContainer isStart={props.cell.isStart} isEnd={props.cell.isEnd} id={props.id} >
-			<p style={{fontSize: '.5rem'}}>{props.cell.col},{props.cell.row}</p>
 		</NodeContainer>
 	)
 }

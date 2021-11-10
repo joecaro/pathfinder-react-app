@@ -36,10 +36,14 @@ const getUnvisitedNeighbors = (cell: ICell, grid: ICell[][]): ICell[] => {
   const unvisitedNeighbors: ICell[] = [];
   const { col, row } = cell;
   console.log(`getting visitors at ${row} ${col}`);
-  if (row > 0) unvisitedNeighbors.push(grid[row - 1][col]);
-  if (row < grid.length - 1) unvisitedNeighbors.push(grid[row + 1][col]);
-  if (col > 0) unvisitedNeighbors.push(grid[row][col - 1]);
-  if (col < grid[0].length - 1) unvisitedNeighbors.push(grid[row][col + 1]);
+  if (row > 0 && grid[row - 1][col].isBlocked === false)
+    unvisitedNeighbors.push(grid[row - 1][col]);
+  if (row < grid.length - 1 && grid[row + 1][col].isBlocked === false)
+    unvisitedNeighbors.push(grid[row + 1][col]);
+  if (col > 0 && grid[row][col - 1].isBlocked === false)
+    unvisitedNeighbors.push(grid[row][col - 1]);
+  if (col < grid[0].length - 1 && grid[row][col + 1].isBlocked === false)
+    unvisitedNeighbors.push(grid[row][col + 1]);
 
   return unvisitedNeighbors.filter((neighbor) => !neighbor.isVisited);
 };
