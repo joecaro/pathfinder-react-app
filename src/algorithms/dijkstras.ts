@@ -35,10 +35,11 @@ export default function dijkstra(
 const getUnvisitedNeighbors = (cell: ICell, grid: ICell[][]): ICell[] => {
   const unvisitedNeighbors: ICell[] = [];
   const { col, row } = cell;
-  if (row > 0) unvisitedNeighbors.push(grid[col][row - 1]);
-  if (row < grid.length - 1) unvisitedNeighbors.push(grid[col][row + 1]);
-  if (col > 0) unvisitedNeighbors.push(grid[col - 1][row]);
-  if (col < grid.length - 1) unvisitedNeighbors.push(grid[col + 1][row]);
+  console.log(`getting visitors at ${row} ${col}`);
+  if (row > 0) unvisitedNeighbors.push(grid[row - 1][col]);
+  if (row < grid.length - 1) unvisitedNeighbors.push(grid[row + 1][col]);
+  if (col > 0) unvisitedNeighbors.push(grid[row][col - 1]);
+  if (col < grid[0].length - 1) unvisitedNeighbors.push(grid[row][col + 1]);
 
   return unvisitedNeighbors.filter((neighbor) => !neighbor.isVisited);
 };
@@ -64,5 +65,15 @@ const getAllCells = (grid: ICell[][]): ICell[] => {
   }
   return cells;
 };
+
+export function getCellsInShortestPath(endCell: ICell) {
+  const cellsInShortestPath: ICell[] = [];
+  let currentCell: ICell | null | undefined = endCell;
+  while (currentCell !== null && currentCell !== undefined) {
+    cellsInShortestPath.unshift(currentCell);
+    currentCell = currentCell.previousCell;
+  }
+  return cellsInShortestPath;
+}
 
 export {};

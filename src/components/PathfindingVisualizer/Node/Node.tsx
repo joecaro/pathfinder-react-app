@@ -16,24 +16,17 @@ const NodeContainer = styled.div<NodeContainerProps>`
 `
 
 export default function Node(props: INodeProps) {
+
+	
 	return (
-		<NodeContainer isStart={props.isStart} isEnd={props.isEnd} id={props.id}>
+		<NodeContainer isStart={props.cell.isStart} isEnd={props.cell.isEnd} id={props.id} >
 			<p style={{fontSize: '.5rem'}}>{props.cell.col},{props.cell.row}</p>
 		</NodeContainer>
 	)
 }
 
 interface INodeProps {
-	isStart: boolean;
-	isEnd: boolean;
 	cell: ICell;
 	id: string;
 }
-
-interface INode {
-	row: number;
-	col: number;
-	isVisited: boolean;
-}
-
 

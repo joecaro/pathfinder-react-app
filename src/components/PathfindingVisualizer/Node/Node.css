@@ -1,5 +1,20 @@
+.node {
+  background-color: #ffffff7d;
+  border-radius: 5px;
+  border: 1px solid #555;
+}
 .node-visited {
   background-color: aqua;
+  border-radius: 5px;
+  border: 1px solid #555;
+}
+.node-path {
+  background-color: rgb(255, 153, 0);
+  border-radius: 5px;
+  border: 1px solid #555;
+}
+.node-wall {
+  background-color: transparent;
   border-radius: 5px;
   border: 1px solid #555;
 }
