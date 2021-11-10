@@ -1,7 +1,10 @@
 import { type } from 'os'
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import Node, {DEFAULT_NODE} from './Node/Node'
+import Node from './Node/Node'
+import UI from '../UI/UI';
+import dijkstra from '../../algorithms/dijkstras';
+
 
 interface ICoordinate{
 	x: number;
@@ -15,7 +18,7 @@ export interface IGrid{
 }
 
 export interface ICell{
-	col: number,
+	col: number;
 	row: number;
 	isStart: boolean;
 	isEnd: boolean;
@@ -24,6 +27,17 @@ export interface ICell{
 	isBlocked: boolean;
 	distance: number;
 	isWall: boolean;
+}
+
+const DEFAULT_NODE: ICell = {
+	col: 0,
+	row: 0,
+	isStart: false,
+	isEnd: false,
+	isVisited: false,
+	isBlocked: false,
+	distance: 0,
+	isWall: false,
 }
 
 const createCell = (col: number, row: number ): ICell => {
@@ -80,12 +94,33 @@ const GridContainer = styled.div<GridProps>`
 export default function PathfindingVisualizer() {
 	const [grid, setGrid] = useState(initialGrid)
 
+const runAlgorithm = () => {
+	let visitedNodesInOrder: ICell[] = dijkstra(grid.gridArray, grid.gridArray[start.x][start.y], grid.gridArray[end.x][end.y] )
+
+	animateAlgorithm(visitedNodesInOrder)
+}
+
+const animateAlgorithm = (visitedCellsInOrder: ICell[]) => {
+	for (let i = 0; i < visitedCellsInOrder.length; i++) {
+		setTimeout(() => {
+			const node = visitedCellsInOrder[i];
+			const element: HTMLElement | null = document.getElementById(`${node.row}-${node.col}`)
+			if (element !== null){
+				element.className = 'node-visited';
+			}
+		}, 10 * i)
+	}
+}
+
 	return (
+		<>
+		<UI runAlgorithm={runAlgorithm}/>
 		<GridContainer width={grid.width} height={grid.height}>
 			{grid.gridArray.map((row: ICell[], rowIndex: number) => row.map((cell: ICell, colIndex: number) => 
 			<Node 
-			key={`${rowIndex}-${colIndex}`} isStart={rowIndex === start.x && colIndex === start.y} isEnd={rowIndex === end.x && colIndex === end.y}	cell={cell}
+			key={`${rowIndex}-${colIndex}`} isStart={rowIndex === start.x && colIndex === start.y} isEnd={rowIndex === end.x && colIndex === end.y}	cell={cell} id={`${rowIndex}-${colIndex}`}
 			/>))}
 		</GridContainer>
+		</>
 	)
 }

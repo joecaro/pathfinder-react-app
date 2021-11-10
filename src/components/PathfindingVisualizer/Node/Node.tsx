@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import {ICell} from '../PathfindingVisualizer'
+import './Node.css';
+
 
 type NodeContainerProps = {
 	isStart: boolean;
@@ -15,7 +17,7 @@ const NodeContainer = styled.div<NodeContainerProps>`
 
 export default function Node(props: INodeProps) {
 	return (
-		<NodeContainer isStart={props.isStart} isEnd={props.isEnd}>
+		<NodeContainer isStart={props.isStart} isEnd={props.isEnd} id={props.id}>
 			<p style={{fontSize: '.5rem'}}>{props.cell.col},{props.cell.row}</p>
 		</NodeContainer>
 	)
@@ -25,6 +27,7 @@ interface INodeProps {
 	isStart: boolean;
 	isEnd: boolean;
 	cell: ICell;
+	id: string;
 }
 
 interface INode {
@@ -34,8 +37,3 @@ interface INode {
 }
 
 
-export const DEFAULT_NODE: INode = {
-	row: 0,
-	col: 0,
-	isVisited: false,
-}

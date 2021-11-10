@@ -12,11 +12,16 @@ const UIContainer = styled.div`
 	}
 `
 
-export default function UI() {
+interface UIProps {
+	runAlgorithm: () => void;
+}
+
+export default function UI(props: UIProps) {
+	const {runAlgorithm} = props;
 	return (
 		<UIContainer>
 			<h1>UI</h1>
-			<button>Run Algorithm</button>
+			<button onClick={runAlgorithm}>Run Algorithm</button>
 		</UIContainer>
 	)
 }
