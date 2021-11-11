@@ -22,15 +22,21 @@ const UIContainer = styled.div`
 		margin-right: 40px;
 	}
 	button {
-		padding: 1rem;
+		padding: .8rem;
 		border-radius: 5px;
 		border: 1px solid #555;
 		margin: auto 10px;
-		background-color: white;
+		background-color: #3a8dc5;
+		font-size: 1.5rem;
+		color: #fff;
 		opacity: .9;
 		:hover {
 			opacity: 1;
 		}
+	}
+	div:first-of-type {
+		display: flex;
+		justify-content: space-between;
 	}
 `
 
@@ -38,6 +44,11 @@ const Square = styled.div`
 	width: 30px;
 	height: 30px;
 	display: inline-block;
+`
+
+const Legend = styled.div`
+ display: flex;
+ align-items: center;
 `
 
 interface UIProps {
@@ -57,9 +68,9 @@ export default function UI(props: UIProps) {
 			<div>
 				<div>
 					<button onClick={runAlgorithm}>Visualize Algorithm</button>
-					<button onClick={handleRefresh}>Reset</button>
+					<button style={{backgroundColor: '#ee2200'}} onClick={handleRefresh}>Reset</button>
 				</div>
-				<div>
+				<Legend>
 					<Square className="node-start"></Square>
 					<p>Starting Cell</p>
 					<Square className="node-end"></Square>
@@ -68,7 +79,7 @@ export default function UI(props: UIProps) {
 					<p>Traversable Cell</p>
 					<Square className="node-wall"></Square>
 					<p>Wall</p>
-				</div>
+				</Legend>
 			</div>	
 		</UIContainer>
 	)
